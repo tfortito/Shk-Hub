@@ -1,0 +1,57 @@
+[
+  {
+    "id": "PLACEHOLDER-geg-65ee-alt",
+    "documentTitle": "PLACEHOLDER Gebaeudeenergiegesetz (GEG), Fassung ab 01.01.2024",
+    "documentShortName": "GEG (superseded)",
+    "paragraphRef": "PLACEHOLDER",
+    "text": "PLACEHOLDER. Neu eingebaute Heizungsanlagen mussten zu mindestens 65 Prozent mit erneuerbaren Energien betrieben werden. Diese Anforderung galt zunaechst fuer Neubauten in Neubaugebieten; fuer Bestandsgebaeude und Baulueckenneubauten galten laengere Uebergangsfristen in Abhaengigkeit von der kommunalen Waermeplanung.",
+    "validFrom": "2024-01-01",
+    "validUntil": "2026-07-28",
+    "sourceUrl": "PLACEHOLDER",
+    "supersededBy": "PLACEHOLDER-gmodg-technologieoffenheit"
+  },
+  {
+    "id": "PLACEHOLDER-gmodg-technologieoffenheit",
+    "documentTitle": "PLACEHOLDER Gebaeudemodernisierungsgesetz (GModG)",
+    "documentShortName": "GModG",
+    "paragraphRef": "PLACEHOLDER",
+    "text": "PLACEHOLDER. Mit Inkrafttreten des Gebaeudemodernisierungsgesetzes entfaellt die Pflicht, dass neu eingebaute Heizungen zu mindestens 65 Prozent mit erneuerbaren Energien betrieben werden. Es gilt wieder grundsaetzlich freie Heizungswahl im Neubau und im Bestand. Eine verpflichtende Beratung vor dem Einbau einer neuen Gas- oder Oelheizung ist nicht mehr vorgeschrieben.",
+    "validFrom": "2026-07-29",
+    "validUntil": null,
+    "sourceUrl": "PLACEHOLDER",
+    "supersededBy": null
+  },
+  {
+    "id": "PLACEHOLDER-beg-foerdersaetze",
+    "documentTitle": "PLACEHOLDER BEG Einzelmassnahmen, Konditionen ab 21.07.2026",
+    "documentShortName": "BEG-EM",
+    "paragraphRef": "PLACEHOLDER",
+    "text": "PLACEHOLDER. Seit dem 21. Juli 2026 betraegt der Zuschuss zwischen 30 und 80 Prozent der foerderfaehigen Kosten. Fuer die erste Wohneinheit werden foerderfaehige Ausgaben bis 28.000 Euro beruecksichtigt; zuvor lag die Grenze bei 30.000 Euro. Die Bonus-Stapelung aus Grundfoerderung, Einkommensbonus und Klimageschwindigkeitsbonus bleibt bestehen, die Saetze werden jedoch schrittweise abgesenkt.",
+    "validFrom": "2026-07-21",
+    "validUntil": null,
+    "sourceUrl": "PLACEHOLDER",
+    "supersededBy": null
+  },
+  {
+    "id": "PLACEHOLDER-beg-absenkung-2027",
+    "documentTitle": "PLACEHOLDER BEG Einzelmassnahmen, Absenkungsstufen",
+    "documentShortName": "BEG-EM",
+    "paragraphRef": "PLACEHOLDER",
+    "text": "PLACEHOLDER. Zum 1. Februar 2027 erfolgt die naechste Absenkungsstufe. Die foerderfaehigen Kosten der Heizungsfoerderung sinken um 750 Euro und der Klimageschwindigkeitsbonus sinkt um vier Prozentpunkte.",
+    "validFrom": "2027-02-01",
+    "validUntil": null,
+    "sourceUrl": "PLACEHOLDER",
+    "supersededBy": null
+  },
+  {
+    "id": "PLACEHOLDER-antragstellung-kfw",
+    "documentTitle": "PLACEHOLDER Heizungsfoerderung, Zustaendigkeit und Antragstellung",
+    "documentShortName": "KfW 458",
+    "paragraphRef": "PLACEHOLDER",
+    "text": "PLACEHOLDER. Antraege im Rahmen der BEG werden durch die KfW bearbeitet. Vom 9. bis 20. Juli 2026 fand eine technische Umstellungsphase statt, in der keine neuen Bestaetigungen zum Antrag und keine technischen Projektbeschreibungen erstellt werden konnten. Bereits zugesagte oder beantragte Vorhaben sind von der Aenderung grundsaetzlich nicht betroffen.",
+    "validFrom": "2026-07-21",
+    "validUntil": null,
+    "sourceUrl": "PLACEHOLDER",
+    "supersededBy": null
+  }
+]

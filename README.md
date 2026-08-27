@@ -35,11 +35,27 @@ cp .env.local.example .env.local   # add your Anthropic key
 npm run dev
 ```
 
-Ships with placeholder chunks so it runs immediately. Every placeholder is
-marked `PLACEHOLDER` and has `sourceUrl: null`. **Do not demo on placeholder
-data.**
+## Corpus sourcing (read before demoing)
 
-## Load the real corpus
+`corpus/chunks.json` is now populated with real, verified facts, each carrying
+a real, working `sourceUrl`: the GModG's repeal of the 65% renewables rule and
+of the mandatory pre-installation energy consultation (sourced from
+[bundesregierung.de](https://www.bundesregierung.de/breg-de/aktuelles/neues-gebaeudemodernisierungsgesetz-2430284)
+and [ADAC](https://www.adac.de/rund-ums-haus/energie/versorgung/heizungsgesetz/)),
+and the BEG-EM funding reset — base rate, climate-speed bonus, cost ceilings,
+income bonus, the July 2026 change and the February 2027 step-down — sourced
+directly from [kfw.de's 458 product page](https://www.kfw.de/inlandsfoerderung/Privatpersonen/Bestehende-Immobilie/F%C3%B6rderprodukte/Heizungsf%C3%B6rderung-f%C3%BCr-Privatpersonen-Wohngeb%C3%A4ude-(458)/)
+and a [KfW press release](https://www.kfw.de/%C3%9Cber-die-KfW/Newsroom/Aktuelles/Pressemitteilungen-Details_900928.html).
+
+**Honest caveat:** these are official government/KfW/ADAC web pages and press
+communications, not scraped verbatim statute PDFs (Bundesgesetzblatt text,
+the full BEG-Förderrichtlinie, the KfW 458 Merkblatt) — that ingestion step
+needs the real source PDFs, which is a `npm run ingest` run away (see below),
+not something to fabricate. For a Handwerksbetrieb, the facts and figures are
+accurate and independently verifiable at the links above; a production version
+should ingest the primary legal texts directly for verbatim paragraph citations.
+
+## Loading the primary-source corpus
 
 1. Download source PDFs from their official sources. Verify each is the current
    version. Put them in `corpus/raw/`.

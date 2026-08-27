@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useLanguage } from "../i18n";
+import { IconWarning, IconShieldCheck } from "../icons";
 
 export default function Vergleich() {
   const { lang, t } = useLanguage();
@@ -77,7 +78,8 @@ export default function Vergleich() {
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
         <section>
-          <p className="section-label" style={{ color: "var(--danger)" }}>
+          <p className="section-label" style={{ color: "var(--danger)", display: "flex", alignItems: "center", gap: 6 }}>
+            <IconWarning size={14} />
             {t.vergleich.withoutCorpus}
           </p>
           <div
@@ -90,7 +92,8 @@ export default function Vergleich() {
         </section>
 
         <section>
-          <p className="section-label" style={{ color: "var(--good)" }}>
+          <p className="section-label" style={{ color: "var(--good)", display: "flex", alignItems: "center", gap: 6 }}>
+            <IconShieldCheck size={14} />
             {t.vergleich.withCorpus}
           </p>
           <div

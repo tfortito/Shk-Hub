@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { SignInButton } from "@clerk/nextjs";
 import { useLanguage } from "./i18n";
 import { DEMO_EMAIL } from "./pricing-config";
+import { IconCheck, IconClock } from "./icons";
+import HeroPreview from "./hero-preview";
 
 const STEP_DOWN_DATE = "2027-02-01T00:00:00";
 const CLERK_CONFIGURED = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
@@ -62,27 +64,31 @@ export default function Home() {
 
   return (
     <main className="container" style={{ paddingBottom: 80 }}>
-      <section className="hero">
-        <span className="eyebrow">{t.home.eyebrow}</span>
-        <h1>{t.home.title}</h1>
-        <p className="lede">{t.home.lede}</p>
-        <div className="trust-row no-print">
-          {t.home.trustPoints.map((p) => (
-            <span className="trust-pill" key={p}>
-              <span className="dot" />
-              {p}
-            </span>
-          ))}
-        </div>
-        {daysToStepDown !== null && (
-          <div className="countdown-banner no-print">
-            <strong>
-              {daysToStepDown} {t.home.countdownLabel}
-            </strong>{" "}
-            {t.home.countdownText}
+      <div className="hero-grid">
+        <section className="hero">
+          <span className="eyebrow">{t.home.eyebrow}</span>
+          <h1>{t.home.title}</h1>
+          <p className="lede">{t.home.lede}</p>
+          <div className="trust-row no-print">
+            {t.home.trustPoints.map((p) => (
+              <span className="trust-pill" key={p}>
+                <IconCheck size={13} />
+                {p}
+              </span>
+            ))}
           </div>
-        )}
-      </section>
+          {daysToStepDown !== null && (
+            <div className="countdown-banner no-print">
+              <IconClock size={15} />
+              <strong>
+                {daysToStepDown} {t.home.countdownLabel}
+              </strong>{" "}
+              {t.home.countdownText}
+            </div>
+          )}
+        </section>
+        <HeroPreview />
+      </div>
 
       <p className="chip-label no-print">{t.home.chipLabel}</p>
       <div className="chip-row no-print">

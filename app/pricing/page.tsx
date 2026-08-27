@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useLanguage } from "../i18n";
 import { CURRENCY, DEMO_EMAIL, PRICING } from "../pricing-config";
+import { IconCheck } from "../icons";
 
 function formatPrice(price: number | null, lang: "de" | "en", customLabel: string, freeLabel: string) {
   if (price === null) return customLabel;
@@ -61,7 +62,10 @@ export default function Pricing() {
               </div>
               <ul className="pricing-features">
                 {tier.copy.features.map((f) => (
-                  <li key={f}>{f}</li>
+                  <li key={f}>
+                    <IconCheck size={15} />
+                    <span>{f}</span>
+                  </li>
                 ))}
               </ul>
               {isExternal ? (

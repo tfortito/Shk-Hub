@@ -1,0 +1,479 @@
+<title>SHK Beachhead</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root {
+    --paper: #f5f6f2;
+    --surface: #ffffff;
+    --ink: #16181c;
+    --ink-soft: #4b5650;
+    --ink-faint: #7c8880;
+    --rule: #d9ddd6;
+    --brand: #0f5b4c;
+    --brand-dark: #0a3f34;
+    --brand-soft: #e4efe8;
+    --amber: #96620a;
+    --amber-soft: #f3e6cc;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #14171a;
+      --surface: #1b201e;
+      --ink: #edf1ee;
+      --ink-soft: #a9b3ac;
+      --ink-faint: #75827a;
+      --rule: #2c332e;
+      --brand: #3bb192;
+      --brand-dark: #7fd4bb;
+      --brand-soft: #1d332b;
+      --amber: #d9a34d;
+      --amber-soft: #332a17;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #14171a;
+    --surface: #1b201e;
+    --ink: #edf1ee;
+    --ink-soft: #a9b3ac;
+    --ink-faint: #75827a;
+    --rule: #2c332e;
+    --brand: #3bb192;
+    --brand-dark: #7fd4bb;
+    --brand-soft: #1d332b;
+    --amber: #d9a34d;
+    --amber-soft: #332a17;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    padding: 40px 20px 64px;
+  }
+
+  .sheet {
+    max-width: 920px;
+    margin: 0 auto;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 44px 52px 40px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; }
+
+  .eyebrow {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--brand);
+    margin: 0 0 14px;
+  }
+
+  h1 {
+    font-family: "IBM Plex Serif", Georgia, serif;
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 1.22;
+    letter-spacing: -0.01em;
+    margin: 0 0 10px;
+    text-wrap: balance;
+    color: var(--ink);
+  }
+
+  .subtitle {
+    font-size: 14.5px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    max-width: 640px;
+    margin: 0 0 18px;
+  }
+
+  .meta {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 11px;
+    color: var(--ink-faint);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 26px;
+  }
+
+  .meta a { color: var(--ink-faint); }
+
+  .kpi-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 30px;
+  }
+
+  .kpi {
+    padding: 16px 18px;
+    border-right: 1px solid var(--rule);
+  }
+  .kpi:last-child { border-right: none; }
+
+  .kpi-num {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-variant-numeric: tabular-nums;
+    font-size: 21px;
+    font-weight: 600;
+    color: var(--brand-dark);
+    line-height: 1.1;
+  }
+
+  .kpi-label {
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    margin-top: 6px;
+    line-height: 1.4;
+  }
+
+  .kpi-ref {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 10px;
+    color: var(--ink-faint);
+    vertical-align: super;
+  }
+
+  .body-grid {
+    display: grid;
+    grid-template-columns: 1.35fr 1fr 1fr;
+    gap: 28px;
+    margin-bottom: 30px;
+  }
+
+  .col h2 {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin: 0 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--brand);
+  }
+
+  .col p {
+    font-size: 12.8px;
+    line-height: 1.62;
+    color: var(--ink-soft);
+    margin: 0 0 12px;
+  }
+
+  .col p strong { color: var(--ink); font-weight: 600; }
+
+  .ref { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 10px; color: var(--brand); vertical-align: super; }
+
+  .roadmap-step {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 13px;
+  }
+  .roadmap-num {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--brand);
+    flex-shrink: 0;
+    padding-top: 1px;
+  }
+  .roadmap-text { font-size: 12.8px; line-height: 1.55; color: var(--ink-soft); }
+  .roadmap-text strong { color: var(--ink); }
+
+  .move { margin-bottom: 14px; }
+  .move-num {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--brand);
+    display: block;
+    margin-bottom: 3px;
+  }
+
+  .objections h2 {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin: 0 0 14px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--amber);
+  }
+
+  .objection-row {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 20px;
+    padding: 14px 0;
+    border-top: 1px solid var(--rule);
+  }
+  .objection-row:last-child { border-bottom: 1px solid var(--rule); }
+
+  .objection-q {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.5;
+    position: relative;
+    padding-left: 14px;
+  }
+  .objection-q::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 3px;
+    bottom: 3px;
+    width: 3px;
+    background: var(--amber);
+    border-radius: 2px;
+  }
+
+  .objection-a {
+    font-size: 12.5px;
+    line-height: 1.62;
+    color: var(--ink-soft);
+  }
+
+  .footer {
+    margin-top: 30px;
+    padding-top: 16px;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .sources {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 9.5px;
+    color: var(--ink-faint);
+    line-height: 1.7;
+    max-width: 620px;
+  }
+  .sources .ref { color: var(--ink-faint); }
+
+  .assumption-note {
+    font-size: 10.5px;
+    color: var(--ink-faint);
+    font-style: italic;
+    margin-top: 10px;
+    max-width: 620px;
+  }
+
+  .live-links {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 10.5px;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .live-links a { color: var(--brand-dark); text-decoration: none; display: block; margin-bottom: 4px; }
+
+  @media (max-width: 760px) {
+    .sheet { padding: 28px 22px; }
+    .kpi-strip { grid-template-columns: repeat(2, 1fr); }
+    .kpi:nth-child(2) { border-right: none; }
+    .body-grid { grid-template-columns: 1fr; }
+    .objection-row { grid-template-columns: 1fr; }
+    .footer { flex-direction: column; }
+    .live-links { text-align: left; }
+  }
+
+  @media print {
+    body { padding: 0; background: var(--surface); font-size: 13px; }
+    .sheet { border: none; box-shadow: none; max-width: 100%; border-radius: 0; padding: 26px 34px; }
+    h1 { font-size: 24px; }
+    .subtitle { font-size: 13px; margin-bottom: 14px; }
+    .meta { padding-bottom: 16px; margin-bottom: 18px; }
+    .kpi-strip { margin-bottom: 22px; page-break-inside: avoid; }
+    .kpi { padding: 12px 16px; }
+    .kpi-num { font-size: 19px; }
+    .body-grid { gap: 22px; margin-bottom: 22px; }
+    .col p { font-size: 11.5px; line-height: 1.5; margin-bottom: 9px; }
+    .col h2 { margin-bottom: 9px; padding-bottom: 6px; }
+    .roadmap-step, .move { margin-bottom: 9px; page-break-inside: avoid; }
+    .roadmap-text { font-size: 11.5px; line-height: 1.48; }
+    .objections h2 { margin-bottom: 8px; }
+    .objection-row { padding: 9px 0; page-break-inside: avoid; grid-template-columns: 215px 1fr; gap: 16px; }
+    .objection-q, .objection-a { font-size: 11.5px; line-height: 1.48; }
+    .footer { margin-top: 18px; padding-top: 12px; page-break-inside: avoid; }
+    .sources { font-size: 9px; line-height: 1.55; }
+  }
+</style>
+
+<div class="sheet">
+  <p class="eyebrow">CraftHub Vertical AI Hub — Case Response</p>
+  <h1>SHK as the beachhead: grounded knowledge before anything else</h1>
+  <p class="subtitle">
+    Why Germany's most fragmented, most legally volatile trade is where a CraftHub should
+    start — and what the live build (Stichtag) proves about that bet.
+  </p>
+  <div class="meta">
+    <span>Prepared for Sebastian Johnston, CITO</span>
+    <span>·</span>
+    <span>27 Aug 2026</span>
+    <span>·</span>
+    <span>Live: <a href="https://shk-hub.vercel.app">shk-hub.vercel.app</a></span>
+    <span>·</span>
+    <span>Repo: <a href="https://github.com/tfortito/Shk-Hub">github.com/tfortito/Shk-Hub</a></span>
+  </div>
+
+  <div class="kpi-strip">
+    <div class="kpi">
+      <div class="kpi-num">48,050</div>
+      <div class="kpi-label">SHK trade businesses in Germany, 2024<span class="kpi-ref">[1]</span></div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-num">388,334</div>
+      <div class="kpi-label">People employed in the SHK trade<span class="kpi-ref">[1]</span></div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-num">€59.1bn</div>
+      <div class="kpi-label">Industry revenue, 2025<span class="kpi-ref">[2]</span></div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-num">2 law changes</div>
+      <div class="kpi-label">in 30 days: GModG + BEG funding reset, July 2026<span class="kpi-ref">[3,4]</span></div>
+    </div>
+  </div>
+
+  <div class="body-grid">
+    <div class="col">
+      <h2>Why SHK</h2>
+      <p>
+        SHK — plumbing, heating, air conditioning — is large, deeply fragmented, and acutely
+        underserved: <strong>48,050 businesses</strong><span class="ref">[1]</span>, mostly
+        Meister-led (master-craftsman-owned), averaging roughly 8 employees, with no
+        DATEV-equivalent centralizing knowledge or communication. Unlike tax advisors, SHK just
+        lived through two real legal changes in one month: the GModG dropped the mandatory
+        65% renewables rule<span class="ref">[3]</span>, and BEG subsidy rates dropped
+        immediately and keep stepping down every six months<span class="ref">[4]</span>.
+      </p>
+      <p>
+        <strong>ICP:</strong> Meister-led SHK business, 5–40 employees. Buying trigger:
+        liability anxiety (a wrong funding number costs trust) plus sales pressure (faster,
+        more confident quotes).
+      </p>
+      <p>
+        <strong>Willingness to pay</strong> <em>(assumption)</em>: JUPUS charges roughly
+        €200–300/month for a comparable AI-secretary bundle in law firms<span class="ref">[5]</span>.
+        SHK businesses already pay for Craftnote, ToolTime, Plancraft, STREIT<span class="ref">[6]</span>
+        — software spend is proven, but SHK billing rates sit below lawyers', so entry pricing
+        needs to sit lower too.
+      </p>
+      <p>
+        <strong>Incumbent &amp; gap:</strong> none of the established SHK tools offer a
+        source-cited knowledge layer with validity dates. Plancraft already markets AI-drafted
+        quotes<span class="ref">[6]</span> — a signal, not a moat: Stichtag can be the trust
+        layer underneath those tools, not a competitor on top of them.
+      </p>
+    </div>
+
+    <div class="col">
+      <h2>What ships first</h2>
+      <p>The three CraftHub building blocks, in build order, not all at once:</p>
+      <div class="roadmap-step">
+        <span class="roadmap-num">01</span>
+        <span class="roadmap-text"><strong>Knowledge</strong> (built, this case) — source-cited
+        answers on law &amp; funding. The cheapest trust proof, and the hardest for a generic
+        chatbot to fake convincingly.</span>
+      </div>
+      <div class="roadmap-step">
+        <span class="roadmap-num">02</span>
+        <span class="roadmap-text"><strong>Workflow</strong> (started) — from a drafted
+        customer email to a real quote-text generator: the trade's actual core output.</span>
+      </div>
+      <div class="roadmap-step">
+        <span class="roadmap-num">03</span>
+        <span class="roadmap-text"><strong>Communication</strong> (later) — phone/WhatsApp
+        intake that captures a request and answers it against the knowledge layer. Pointless
+        until that layer is trustworthy: an AI front desk quoting the wrong subsidy is worse
+        than no AI front desk.</span>
+      </div>
+    </div>
+
+    <div class="col">
+      <h2>First 30 days</h2>
+      <div class="move">
+        <span class="move-num">01</span>
+        <span class="roadmap-text">Ingest the real primary-source corpus: full
+        Bundesgesetzblatt / BEG-Förderrichtlinie / KfW-Merkblatt PDFs instead of web-page
+        summaries, plus 2–3 adjacent topics (heat-pump subsidy detail, hydraulic-balancing
+        requirements, chimney-sweep certification).</span>
+      </div>
+      <div class="move">
+        <span class="move-num">02</span>
+        <span class="roadmap-text">Recruit 5 design-partner businesses via Innung/ZVSHK
+        networks, free for 30 days for structured weekly feedback — validate real question
+        patterns and willingness to pay before finalizing pricing.</span>
+      </div>
+      <div class="move">
+        <span class="move-num">03</span>
+        <span class="roadmap-text">Ship the quote-text generator plus a simple "hours saved"
+        metric — turn the trust proof into a number that closes the sales conversation.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="objections">
+    <h2>Three hardest objections</h2>
+    <div class="objection-row">
+      <div class="objection-q">"We already pay for Craftnote / Plancraft / STREIT — why another tool?"</div>
+      <div class="objection-a">Those tools speed up your existing workflow. Stichtag answers a
+      different question: is what I'm about to tell this customer still true? That's not
+      project management, that's liability — and it can run as the fact layer under your
+      existing AI features, not beside them.</div>
+    </div>
+    <div class="objection-row">
+      <div class="objection-q">"AI hallucinates — how do I know it won't tell my customer something wrong, and I take the blame?"</div>
+      <div class="objection-a">That's the design, not an afterthought. It answers only from
+      loaded documents, never from training knowledge, and declines when nothing is loaded.
+      Every claim shows its source and validity date; when old and new law both surface, it
+      says so instead of picking one silently. You're not trusting the AI's judgment — you're
+      trusting that it can only quote what's actually on file, and you can check every citation
+      yourself in one click.</div>
+    </div>
+    <div class="objection-row">
+      <div class="objection-q">"€39/month and setup time isn't worth it for a business our size."</div>
+      <div class="objection-a">One wrong funding figure costs you either the job (the customer
+      finds a competitor with the current number) or the relationship (they signed on your
+      number and it's no longer true) — that's more than a year of this tool. Setup is one
+      link, no install, first answer in 30 seconds. The free trial exists so you don't have to
+      take our word for it — test it on your hardest question before you pay anything.</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div>
+      <div class="sources">
+        <span class="ref">[1]</span> ZVSHK, "SHK-Handwerk 2025: Umsatz und Aufträge rückläufig" — zvshk.de<br>
+        <span class="ref">[2]</span> ZVSHK press releases, 2024–2025 — zvshk.de<br>
+        <span class="ref">[3]</span> Bundesregierung.de, "Neues Gebäudemodernisierungsgesetz"; Bundestag plenary record, KW28 2026<br>
+        <span class="ref">[4]</span> KfW, product page "Heizungsförderung 458"; KfW press release, July 2026<br>
+        <span class="ref">[5]</span> jupus.de, published pricing for the KI-Sekretariat bundle<br>
+        <span class="ref">[6]</span> Craftnote.de; Plancraft product page; softwareabc24.de SHK software comparison
+      </div>
+      <p class="assumption-note">Points marked "assumption" are explicitly unverified — flagged rather than presented as fact, on purpose.</p>
+    </div>
+    <div class="live-links">
+      <a href="https://shk-hub.vercel.app">→ Live app</a>
+      <a href="https://github.com/tfortito/Shk-Hub">→ Source repo</a>
+    </div>
+  </div>
+</div>

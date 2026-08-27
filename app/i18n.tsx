@@ -44,6 +44,10 @@ interface HomeDict {
   exportPdf: string;
   printQuestion: string;
   printGeneratedAt: string;
+  draftEmail: string;
+  draftingEmail: string;
+  draftEmailTitle: string;
+  draftEmailError: string;
   footer: string;
   trialBadge: (remaining: number) => string;
   trialExhaustedTitle: string;
@@ -162,6 +166,10 @@ const dict: Record<Lang, Dict> = {
       exportPdf: "Als PDF exportieren",
       printQuestion: "Frage",
       printGeneratedAt: "Erstellt am",
+      draftEmail: "Kundenschreiben entwerfen",
+      draftingEmail: "Entwirft...",
+      draftEmailTitle: "Entwurf für Ihren Kunden",
+      draftEmailError: "Entwurf konnte nicht erstellt werden.",
       footer: "Stichtag · Keine Rechtsberatung · Verbindlich sind stets die Originaldokumente. Der Meister entscheidet.",
       trialBadge: (remaining: number) =>
         remaining === 1 ? "Noch 1 kostenlose Frage" : `Noch ${remaining} kostenlose Fragen`,
@@ -314,6 +322,10 @@ const dict: Record<Lang, Dict> = {
       exportPdf: "Export as PDF",
       printQuestion: "Question",
       printGeneratedAt: "Generated on",
+      draftEmail: "Draft customer email",
+      draftingEmail: "Drafting...",
+      draftEmailTitle: "Draft for your customer",
+      draftEmailError: "Couldn't generate a draft.",
       footer: "Stichtag · Not legal advice · The original documents are always binding. The Meister decides.",
       trialBadge: (remaining: number) =>
         remaining === 1 ? "1 free question left" : `${remaining} free questions left`,

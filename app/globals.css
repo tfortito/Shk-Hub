@@ -576,6 +576,25 @@ input {
   margin-top: 14px;
 }
 
+.draft-card {
+  margin-top: 18px;
+  background: var(--brand-soft);
+  border: 1px solid rgba(15, 91, 76, 0.18);
+  border-radius: var(--radius-lg);
+  padding: 20px 22px;
+}
+
+.draft-card .section-label {
+  color: var(--brand-dark);
+}
+
+.draft-text {
+  font-size: 14px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  color: var(--ink);
+}
+
 .print-header {
   display: none;
 }

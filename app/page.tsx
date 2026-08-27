@@ -30,6 +30,9 @@ export default function Home() {
   const [askedAt, setAskedAt] = useState<Date | null>(null);
   const [trialRemaining, setTrialRemaining] = useState<number | null>(null);
   const [trialExhausted, setTrialExhausted] = useState(false);
+  const [draft, setDraft] = useState<string | null>(null);
+  const [draftLoading, setDraftLoading] = useState(false);
+  const [draftError, setDraftError] = useState<string | null>(null);
 
   const daysToStepDown = useDaysUntil(STEP_DOWN_DATE);
 
@@ -40,6 +43,8 @@ export default function Home() {
     setActive(null);
     setQ(question);
     setTrialExhausted(false);
+    setDraft(null);
+    setDraftError(null);
     try {
       const res = await fetch("/api/ask", {
         method: "POST",
@@ -59,6 +64,26 @@ export default function Home() {
       setErr(e.message);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function draftEmail() {
+    if (!data) return;
+    setDraftLoading(true);
+    setDraftError(null);
+    try {
+      const res = await fetch("/api/draft", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: q, answer: data.answer, lang }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error ?? "Error");
+      setDraft(json.draft);
+    } catch (e: any) {
+      setDraftError(e.message);
+    } finally {
+      setDraftLoading(false);
     }
   }
 
@@ -162,11 +187,24 @@ export default function Home() {
 
               {data.citations.length === 0 && <div className="warn-line">{t.home.noCitations}</div>}
 
-              <div className="answer-actions no-print">
+              <div className="answer-actions no-print" style={{ display: "flex", gap: 10 }}>
                 <button className="btn-secondary" onClick={() => window.print()}>
                   {t.home.exportPdf}
                 </button>
+                <button className="btn-secondary" onClick={draftEmail} disabled={draftLoading}>
+                  {draftLoading && <span className="spinner" style={{ borderColor: "rgba(20,20,15,0.2)", borderTopColor: "var(--ink)" }} />}
+                  {draftLoading ? t.home.draftingEmail : t.home.draftEmail}
+                </button>
               </div>
+
+              {draftError && <div className="alert alert-danger no-print">{draftError}</div>}
+
+              {draft && (
+                <div className="draft-card no-print">
+                  <p className="section-label">{t.home.draftEmailTitle}</p>
+                  <div className="draft-text">{draft}</div>
+                </div>
+              )}
 
               <p className="meta-line">{t.home.metaLine(data.retrieved, data.citations.length)}</p>
             </section>

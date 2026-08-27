@@ -97,7 +97,13 @@ export default function Vergleich() {
             className="answer-card"
             style={{ border: "1px solid var(--good-border)", minHeight: 200, fontSize: 14 }}
           >
-            {right ? (right.error ?? right.answer) : loading ? "..." : t.vergleich.notRun}
+            {right
+              ? right.trialExhausted
+                ? `${t.home.trialExhaustedTitle} ${t.home.trialExhaustedBody}`
+                : right.error ?? right.answer
+              : loading
+              ? "..."
+              : t.vergleich.notRun}
           </div>
           {right?.citations?.length > 0 && (
             <div style={{ marginTop: 12 }}>

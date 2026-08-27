@@ -1,8 +1,11 @@
-# SHK Förder-Assistent
+# Stichtag
 
 Grounded, source-cited Q&A over German heating regulation and subsidy rules, for
 SHK Fachbetriebe. Every answer is tied to a specific passage in a specific
 document and states which regulatory period that passage belongs to.
+
+The name is German for "cutoff/deadline date" — it's not just a name, it's the
+mechanic: the law has cutoff dates, and this product tracks them.
 
 ## Why validity dating is the product
 
@@ -61,6 +64,27 @@ hydraulischer Abgleich Verfahren B and Inbetriebnahmeprotokoll forms.
   paper trail a Fachbetrieb can put in a customer file.
 - **A demo-request CTA** in the nav, so a prospect looking at the live
   deployment has an immediate path to contact.
+- **A free trial with a hard cap.** Anyone gets 5 free questions (tracked by
+  an httpOnly cookie, `app/lib/access.ts`), then hits a sign-in wall. Change
+  `FREE_TRIAL_QUESTIONS` in that file to adjust the number.
+- **A pricing page** (`/pricing`) with three tiers you edit in one file —
+  `app/pricing-config.ts` for the numbers, `app/i18n.tsx` (`pricing` key) for
+  the copy. No payment processor wired up; the paid tiers' CTA is a mailto to
+  you — this is meant for closing deals by hand, not self-serve checkout.
+  Swap in real Stripe Checkout once you have a couple of customers.
+
+### Turning on sign-in (Clerk)
+
+Auth is optional and the app runs fine without it — the trial cap still
+applies, there's just no way to sign back in past it yet. To enable it:
+
+1. Create a free application at [clerk.com](https://clerk.com).
+2. Copy its **Publishable key** and **Secret key** into `.env.local` (see
+   `.env.local.example`) locally, and into the Vercel project's Environment
+   Variables for production.
+3. Redeploy. `middleware.ts` and `app/layout.tsx` both detect the keys at
+   runtime and turn on Clerk's sign-in modal / user menu automatically —
+   no other code changes needed.
 
 ## Deliberately out of scope
 
@@ -78,5 +102,8 @@ Citations API as one document block each. Document index maps directly back to a
 chunk, so every citation resolves to real source text rather than a paraphrase.
 
 - `scripts/ingest.mjs` — PDF to dated chunks
-- `app/api/ask/route.ts` — retrieval plus citations call
+- `app/api/ask/route.ts` — retrieval plus citations call, trial gating
 - `app/page.tsx` — two-pane UI, answer left, resolvable sources right
+- `app/lib/access.ts` — free-trial cookie counter and Clerk sign-in check
+- `middleware.ts` — Clerk middleware, no-ops until Clerk keys are set
+- `app/pricing/page.tsx` + `app/pricing-config.ts` — pricing page and its config

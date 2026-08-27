@@ -2,6 +2,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { NextResponse } from "next/server";
 import fs from "node:fs";
 import path from "node:path";
+import { checkTrial, commitTrialUse } from "../../lib/access";
 
 export const runtime = "nodejs";
 
@@ -141,14 +142,27 @@ export async function POST(req: Request) {
     }
     const lang: "de" | "en" = rawLang === "en" ? "en" : "de";
 
+    const trial = await checkTrial();
+    if (!trial.allowed) {
+      return NextResponse.json(
+        { error: "trial exhausted", trialExhausted: true, trialRemaining: 0 },
+        { status: 402 }
+      );
+    }
+
+    async function respond(body: Record<string, unknown>) {
+      const res = NextResponse.json({
+        ...body,
+        trialRemaining: trial.signedIn ? null : Math.max(0, trial.remaining - 1),
+      });
+      if (!trial.signedIn) await commitTrialUse(res);
+      return res;
+    }
+
     const searchQuery = lang === "en" ? await germanSearchQuery(question) : question;
     const selected = retrieve(searchQuery);
     if (selected.length === 0) {
-      return NextResponse.json({
-        answer: NO_MATCH[lang],
-        citations: [],
-        retrieved: 0,
-      });
+      return respond({ answer: NO_MATCH[lang], citations: [], retrieved: 0 });
     }
 
     // One document block per chunk, so document_index maps straight back to a chunk.
@@ -206,7 +220,7 @@ export async function POST(req: Request) {
 
     const periods = new Set(unique.map((c) => c.validFrom ?? "unknown"));
 
-    return NextResponse.json({
+    return respond({
       answer,
       citations: unique,
       retrieved: selected.length,

@@ -11,6 +11,7 @@ export default function NavLinks() {
   const LINKS = [
     { href: "/", label: t.nav.assistant },
     { href: "/vergleich", label: t.nav.vergleich },
+    { href: "/pricing", label: t.nav.pricing },
   ];
 
   return (
@@ -25,7 +26,7 @@ export default function NavLinks() {
         </Link>
       ))}
       <a
-        href="mailto:titogngl66@gmail.com?subject=SHK%20F%C3%B6rder-Assistent%20%E2%80%93%20Demo%20anfragen"
+        href="mailto:titogngl66@gmail.com?subject=Stichtag%20%E2%80%93%20Demo%20anfragen"
         className="nav-cta"
       >
         {t.nav.demo}

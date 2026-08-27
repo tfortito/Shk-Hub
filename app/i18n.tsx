@@ -45,6 +45,31 @@ interface HomeDict {
   printQuestion: string;
   printGeneratedAt: string;
   footer: string;
+  trialBadge: (remaining: number) => string;
+  trialExhaustedTitle: string;
+  trialExhaustedBody: string;
+  signInToContinue: string;
+}
+
+interface PricingTierCopy {
+  name: string;
+  tagline: string;
+  features: string[];
+  cta: string;
+}
+
+interface PricingDict {
+  eyebrow: string;
+  title: string;
+  lede: string;
+  perMonth: string;
+  custom: string;
+  free: string;
+  mostPopular: string;
+  trial: PricingTierCopy;
+  pro: PricingTierCopy;
+  team: PricingTierCopy;
+  footerNote: string;
 }
 
 interface VergleichDict {
@@ -69,14 +94,21 @@ interface VergleichDict {
 }
 
 interface Dict {
-  nav: { assistant: string; vergleich: string; demo: string };
+  nav: { assistant: string; vergleich: string; pricing: string; demo: string; signIn: string };
   home: HomeDict;
   vergleich: VergleichDict;
+  pricing: PricingDict;
 }
 
 const dict: Record<Lang, Dict> = {
   de: {
-    nav: { assistant: "Assistent", vergleich: "Vergleich", demo: "Demo anfragen" },
+    nav: {
+      assistant: "Assistent",
+      vergleich: "Vergleich",
+      pricing: "Preise",
+      demo: "Demo anfragen",
+      signIn: "Anmelden",
+    },
     home: {
       eyebrow: "GModG & BEG · Stand Juli 2026",
       title: "Antworten zu Heizungsgesetz & Förderung, jede Zeile mit Beleg.",
@@ -130,7 +162,13 @@ const dict: Record<Lang, Dict> = {
       exportPdf: "Als PDF exportieren",
       printQuestion: "Frage",
       printGeneratedAt: "Erstellt am",
-      footer: "SHK Förder-Assistent · Keine Rechtsberatung · Verbindlich sind stets die Originaldokumente. Der Meister entscheidet.",
+      footer: "Stichtag · Keine Rechtsberatung · Verbindlich sind stets die Originaldokumente. Der Meister entscheidet.",
+      trialBadge: (remaining: number) =>
+        remaining === 1 ? "Noch 1 kostenlose Frage" : `Noch ${remaining} kostenlose Fragen`,
+      trialExhaustedTitle: "Kostenlose Fragen aufgebraucht.",
+      trialExhaustedBody:
+        "Sie haben Ihre 5 kostenlosen Fragen genutzt. Melden Sie sich an, um unbegrenzt weiterzumachen.",
+      signInToContinue: "Anmelden & weitermachen",
     },
     vergleich: {
       eyebrow: "Direktvergleich",
@@ -168,11 +206,61 @@ const dict: Record<Lang, Dict> = {
       error: "Fehler",
       closing:
         "Der linke Assistent wird nicht künstlich benachteiligt. Er erhält dieselbe Frage ohne Zusatzanweisung. Der Unterschied entsteht allein dadurch, dass er die aktuelle Rechtslage nicht kennt und das nicht wissen kann.",
-      footer: "SHK Förder-Assistent · Keine Rechtsberatung · Verbindlich sind stets die Originaldokumente. Der Meister entscheidet.",
+      footer: "Stichtag · Keine Rechtsberatung · Verbindlich sind stets die Originaldokumente. Der Meister entscheidet.",
+    },
+    pricing: {
+      eyebrow: "Preise",
+      title: "Ein Preis pro Betrieb, keine Überraschungen.",
+      lede:
+        "Testen Sie kostenlos mit 5 Fragen. Danach ein fester Monatspreis pro Betrieb, unabhängig davon, wie viele Mitarbeiter mitfragen.",
+      perMonth: "/ Monat",
+      custom: "Auf Anfrage",
+      free: "Kostenlos",
+      mostPopular: "Meistgewählt",
+      trial: {
+        name: "Test",
+        tagline: "Zum Ausprobieren, ohne Anmeldung.",
+        features: [
+          "5 kostenlose Fragen",
+          "Volle Zitat- und Gültigkeitsanzeige",
+          "Direktvergleich zu allgemeiner KI",
+        ],
+        cta: "Jetzt testen",
+      },
+      pro: {
+        name: "Betrieb",
+        tagline: "Für einen SHK-Fachbetrieb, unbegrenzt viele Fragen.",
+        features: [
+          "Unbegrenzte Fragen für den ganzen Betrieb",
+          "PDF-Export für die Kundenakte",
+          "Hinweis bei jeder Rechtsänderung im Korpus",
+          "E-Mail-Support",
+        ],
+        cta: "Demo anfragen",
+      },
+      team: {
+        name: "Innung & Mehrere Standorte",
+        tagline: "Für Innungen, Verbände oder Betriebe mit mehreren Standorten.",
+        features: [
+          "Mehrere Standorte und Logins",
+          "Eigene Dokumente ergänzbar (z. B. Innungsvorgaben)",
+          "API-Zugang",
+          "Persönliches Onboarding",
+        ],
+        cta: "Kontakt aufnehmen",
+      },
+      footerNote:
+        "Alle Preise zzgl. USt. Keine Kartenangaben für den Test nötig. Kündigung jederzeit zum Monatsende.",
     },
   },
   en: {
-    nav: { assistant: "Assistant", vergleich: "Comparison", demo: "Request a demo" },
+    nav: {
+      assistant: "Assistant",
+      vergleich: "Comparison",
+      pricing: "Pricing",
+      demo: "Request a demo",
+      signIn: "Sign in",
+    },
     home: {
       eyebrow: "GModG & BEG · As of July 2026",
       title: "Answers on German heating law & subsidies, every line with a citation.",
@@ -226,7 +314,12 @@ const dict: Record<Lang, Dict> = {
       exportPdf: "Export as PDF",
       printQuestion: "Question",
       printGeneratedAt: "Generated on",
-      footer: "SHK Förder-Assistent · Not legal advice · The original documents are always binding. The Meister decides.",
+      footer: "Stichtag · Not legal advice · The original documents are always binding. The Meister decides.",
+      trialBadge: (remaining: number) =>
+        remaining === 1 ? "1 free question left" : `${remaining} free questions left`,
+      trialExhaustedTitle: "Free questions used up.",
+      trialExhaustedBody: "You've used your 5 free questions. Sign in to keep going, unlimited.",
+      signInToContinue: "Sign in & continue",
     },
     vergleich: {
       eyebrow: "Head-to-head",
@@ -264,7 +357,46 @@ const dict: Record<Lang, Dict> = {
       error: "Error",
       closing:
         "The left assistant is not artificially handicapped. It gets the same question with no extra instructions. The difference comes purely from the fact that it doesn't know the current legal status, and can't.",
-      footer: "SHK Förder-Assistent · Not legal advice · The original documents are always binding. The Meister decides.",
+      footer: "Stichtag · Not legal advice · The original documents are always binding. The Meister decides.",
+    },
+    pricing: {
+      eyebrow: "Pricing",
+      title: "One price per business, no surprises.",
+      lede:
+        "Try it free with 5 questions. After that, a flat monthly price per business, no matter how many staff ask questions.",
+      perMonth: "/ month",
+      custom: "Custom",
+      free: "Free",
+      mostPopular: "Most popular",
+      trial: {
+        name: "Trial",
+        tagline: "Try it out, no sign-up required.",
+        features: ["5 free questions", "Full citation & validity display", "Head-to-head vs. general AI"],
+        cta: "Try it now",
+      },
+      pro: {
+        name: "Business",
+        tagline: "For one trade business, unlimited questions.",
+        features: [
+          "Unlimited questions for the whole business",
+          "PDF export for the customer file",
+          "Alerted on every legal change in the corpus",
+          "Email support",
+        ],
+        cta: "Request a demo",
+      },
+      team: {
+        name: "Guild & Multi-location",
+        tagline: "For trade guilds, associations, or multi-location businesses.",
+        features: [
+          "Multiple locations and logins",
+          "Add your own documents (e.g. guild requirements)",
+          "API access",
+          "Personal onboarding",
+        ],
+        cta: "Get in touch",
+      },
+      footerNote: "All prices exclude VAT. No card required for the trial. Cancel any time, effective end of month.",
     },
   },
 };

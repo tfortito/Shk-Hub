@@ -1,9 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { SignInButton } from "@clerk/nextjs";
 import { useLanguage } from "./i18n";
+import { DEMO_EMAIL } from "./pricing-config";
 
 const STEP_DOWN_DATE = "2027-02-01T00:00:00";
+const CLERK_CONFIGURED = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 
 function useDaysUntil(iso: string): number | null {
   const [days, setDays] = useState<number | null>(null);
@@ -23,6 +26,8 @@ export default function Home() {
   const [err, setErr] = useState<string | null>(null);
   const [active, setActive] = useState<number | null>(null);
   const [askedAt, setAskedAt] = useState<Date | null>(null);
+  const [trialRemaining, setTrialRemaining] = useState<number | null>(null);
+  const [trialExhausted, setTrialExhausted] = useState(false);
 
   const daysToStepDown = useDaysUntil(STEP_DOWN_DATE);
 
@@ -32,6 +37,7 @@ export default function Home() {
     setData(null);
     setActive(null);
     setQ(question);
+    setTrialExhausted(false);
     try {
       const res = await fetch("/api/ask", {
         method: "POST",
@@ -39,9 +45,14 @@ export default function Home() {
         body: JSON.stringify({ question, lang }),
       });
       const json = await res.json();
+      if (res.status === 402 || json.trialExhausted) {
+        setTrialExhausted(true);
+        return;
+      }
       if (!res.ok) throw new Error(json.error ?? "Error");
       setData(json);
       setAskedAt(new Date());
+      if (typeof json.trialRemaining === "number") setTrialRemaining(json.trialRemaining);
     } catch (e: any) {
       setErr(e.message);
     } finally {
@@ -94,17 +105,39 @@ export default function Home() {
           {loading && <span className="spinner" />}
           {loading ? t.home.asking : t.home.ask}
         </button>
+        {trialRemaining !== null && !trialExhausted && (
+          <span className="trial-badge no-print">{t.home.trialBadge(trialRemaining)}</span>
+        )}
       </div>
 
       {err && <div className="alert alert-danger no-print">{err}</div>}
 
-      {!data && !err && !loading && <div className="empty-state no-print">{t.home.emptyState}</div>}
+      {trialExhausted && (
+        <div className="trial-gate no-print">
+          <h3>{t.home.trialExhaustedTitle}</h3>
+          <p>{t.home.trialExhaustedBody}</p>
+          {CLERK_CONFIGURED ? (
+            <SignInButton mode="modal">
+              <button className="btn-primary">{t.home.signInToContinue}</button>
+            </SignInButton>
+          ) : (
+            <a
+              className="btn-primary"
+              href={`mailto:${DEMO_EMAIL}?subject=${encodeURIComponent("Stichtag – Zugang")}`}
+            >
+              {t.home.signInToContinue}
+            </a>
+          )}
+        </div>
+      )}
 
-      {data && (
+      {!data && !err && !loading && !trialExhausted && <div className="empty-state no-print">{t.home.emptyState}</div>}
+
+      {data && !trialExhausted && (
         <>
           <div className="print-header">
             <p>
-              SHK Förder-Assistent · {t.home.printGeneratedAt} {askedAt?.toLocaleString(lang === "en" ? "en-GB" : "de-DE")}
+              Stichtag · {t.home.printGeneratedAt} {askedAt?.toLocaleString(lang === "en" ? "en-GB" : "de-DE")}
             </p>
             <p>
               <strong>{t.home.printQuestion}:</strong> {q}

@@ -15,6 +15,15 @@ A general assistant answers these questions from training data and cannot tell
 you which version of the law its answer belongs to. This one refuses to answer
 outside its corpus, and flags when retrieved passages span a regulatory change.
 
+## English
+
+The UI and the assistant's answers are available in German or English via the
+switcher in the top nav (persisted per browser). The corpus itself stays
+German-only — the source law is German — so an English question is translated
+to a German search query for retrieval only; the answer is generated fresh in
+English, grounded in the same cited German passages, with key legal terms kept
+in German in parentheses on first use.
+
 ## Run it
 
 ```bash
@@ -41,6 +50,17 @@ a confidently wrong validity period is worse than an absent one.
 Intended corpus: GModG statute text, BEG-EM Förderrichtlinie, KfW 458 Merkblatt,
 BAFA guidance on the July 2026 adjustment, kommunale Wärmeplanung deadlines,
 hydraulischer Abgleich Verfahren B and Inbetriebnahmeprotokoll forms.
+
+## What makes this sellable, not just a demo
+
+- **A live countdown to the next regulatory cutoff** (1 February 2027 BEG
+  step-down) on the homepage. It's the same validity-dating data already in
+  the corpus, surfaced as urgency instead of buried in a citation.
+- **Audit-ready export.** Every answer can be exported to PDF (print dialog,
+  no extra dependency) with the question, timestamp, and full citations — a
+  paper trail a Fachbetrieb can put in a customer file.
+- **A demo-request CTA** in the nav, so a prospect looking at the live
+  deployment has an immediate path to contact.
 
 ## Deliberately out of scope
 

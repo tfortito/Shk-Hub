@@ -1,27 +1,11 @@
 "use client";
 
 import { useState } from "react";
-
-const PROBES = [
-  {
-    label: "65-Prozent-Regel",
-    q: "Muss eine neu eingebaute Heizung zu 65 Prozent mit erneuerbaren Energien betrieben werden?",
-    note: "Anforderung entfallen mit Inkrafttreten des GModG am 29.07.2026.",
-  },
-  {
-    label: "Förderhöhe",
-    q: "Wie hoch ist der Zuschuss für den Heizungstausch und bis zu welchen förderfähigen Kosten für die erste Wohneinheit?",
-    note: "Konditionen am 21.07.2026 neu gesetzt.",
-  },
-  {
-    label: "Beratungspflicht",
-    q: "Muss ich meinen Kunden vor dem Einbau einer neuen Gasheizung verpflichtend beraten lassen?",
-    note: "Verpflichtende Beratung mit dem GModG entfallen.",
-  },
-];
+import { useLanguage } from "../i18n";
 
 export default function Vergleich() {
-  const [q, setQ] = useState(PROBES[0].q);
+  const { lang, t } = useLanguage();
+  const [q, setQ] = useState(t.vergleich.probes[0].q);
   const [loading, setLoading] = useState(false);
   const [left, setLeft] = useState<any>(null);
   const [right, setRight] = useState<any>(null);
@@ -37,36 +21,31 @@ export default function Vergleich() {
       fetch("/api/ungrounded", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question }),
+        body: JSON.stringify({ question, lang }),
       }).then((r) => r.json()),
       fetch("/api/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question }),
+        body: JSON.stringify({ question, lang }),
       }).then((r) => r.json()),
     ]);
 
-    setLeft(u.status === "fulfilled" ? u.value : { error: "Fehler" });
-    setRight(g.status === "fulfilled" ? g.value : { error: "Fehler" });
+    setLeft(u.status === "fulfilled" ? u.value : { error: t.vergleich.error });
+    setRight(g.status === "fulfilled" ? g.value : { error: t.vergleich.error });
     setLoading(false);
   }
 
   return (
     <main className="container" style={{ paddingBottom: 80 }}>
       <section className="hero" style={{ paddingBottom: 0 }}>
-        <span className="eyebrow">Direktvergleich</span>
-        <h1>Warum allgemeine KI hier gefährlich ist</h1>
-        <p className="lede">
-          Dieselbe Frage, zweimal gestellt. Links ein allgemeiner Assistent ohne
-          Regelwerk. Rechts derselbe Assistent, aber ausschließlich auf Basis
-          der hinterlegten Originaldokumente, mit Quellenangabe und
-          Gültigkeitsdatum.
-        </p>
+        <span className="eyebrow">{t.vergleich.eyebrow}</span>
+        <h1>{t.vergleich.title}</h1>
+        <p className="lede">{t.vergleich.lede}</p>
       </section>
 
-      <p className="chip-label">Testfragen</p>
+      <p className="chip-label">{t.vergleich.chipLabel}</p>
       <div className="chip-row">
-        {PROBES.map((p) => (
+        {t.vergleich.probes.map((p) => (
           <button key={p.label} onClick={() => run(p.q)} title={p.note} className="chip">
             {p.label}
           </button>
@@ -78,7 +57,7 @@ export default function Vergleich() {
           style={{ display: "inline-flex", alignItems: "center", gap: 8 }}
         >
           {loading && <span className="spinner" style={{ borderColor: "rgba(20,20,15,0.2)", borderTopColor: "var(--ink)" }} />}
-          {loading ? "läuft..." : "Erneut ausführen"}
+          {loading ? t.vergleich.running : t.vergleich.rerun}
         </button>
       </div>
 
@@ -93,32 +72,32 @@ export default function Vergleich() {
           boxShadow: "var(--shadow-sm)",
         }}
       >
-        <strong>Frage:</strong> {q}
+        <strong>{t.vergleich.question}:</strong> {q}
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
         <section>
           <p className="section-label" style={{ color: "var(--danger)" }}>
-            Ohne Regelwerk
+            {t.vergleich.withoutCorpus}
           </p>
           <div
             className="answer-card"
             style={{ border: "1px solid var(--danger-border)", minHeight: 200, fontSize: 14 }}
           >
-            {left ? (left.error ?? left.answer) : loading ? "..." : "Noch nicht ausgeführt."}
+            {left ? (left.error ?? left.answer) : loading ? "..." : t.vergleich.notRun}
           </div>
-          <p className="meta-line">Keine Quelle. Kein Gültigkeitsdatum. Nicht überprüfbar.</p>
+          <p className="meta-line">{t.vergleich.withoutCorpusMeta}</p>
         </section>
 
         <section>
           <p className="section-label" style={{ color: "var(--good)" }}>
-            Mit Regelwerk
+            {t.vergleich.withCorpus}
           </p>
           <div
             className="answer-card"
             style={{ border: "1px solid var(--good-border)", minHeight: 200, fontSize: 14 }}
           >
-            {right ? (right.error ?? right.answer) : loading ? "..." : "Noch nicht ausgeführt."}
+            {right ? (right.error ?? right.answer) : loading ? "..." : t.vergleich.notRun}
           </div>
           {right?.citations?.length > 0 && (
             <div style={{ marginTop: 12 }}>
@@ -128,9 +107,9 @@ export default function Vergleich() {
                     {i + 1}
                   </span>
                   {c.documentTitle}
-                  {c.paragraphRef ? `, ${c.paragraphRef}` : ""} · gültig ab{" "}
-                  {c.validFrom ?? "unbekannt"}
-                  {c.supersededBy ? " · ERSETZT" : ""}
+                  {c.paragraphRef ? `, ${c.paragraphRef}` : ""} · {t.vergleich.validFrom}{" "}
+                  {c.validFrom ?? t.vergleich.unknown}
+                  {c.supersededBy ? ` · ${t.vergleich.superseded}` : ""}
                 </div>
               ))}
             </div>
@@ -139,17 +118,11 @@ export default function Vergleich() {
       </div>
 
       <p className="meta-line" style={{ maxWidth: 720 }}>
-        Der linke Assistent wird nicht künstlich benachteiligt. Er erhält
-        dieselbe Frage ohne Zusatzanweisung. Der Unterschied entsteht allein
-        dadurch, dass er die aktuelle Rechtslage nicht kennt und das nicht
-        wissen kann.
+        {t.vergleich.closing}
       </p>
 
       <footer className="site-footer">
-        <p>
-          SHK Förder-Assistent · Keine Rechtsberatung · Verbindlich sind stets
-          die Originaldokumente. Der Meister entscheidet.
-        </p>
+        <p>{t.vergleich.footer}</p>
       </footer>
     </main>
   );

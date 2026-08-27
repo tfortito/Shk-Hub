@@ -74,7 +74,7 @@ function validityLabel(c: Chunk): string {
   return `Gueltig von ${from} bis ${until}.${superseded}`;
 }
 
-const SYSTEM = `Du beantwortest Fragen zu deutschem Gebaeuderecht und zur Heizungsfoerderung fuer SHK-Fachbetriebe.
+const SYSTEM_BASE = `Du beantwortest Fragen zu deutschem Gebaeuderecht und zur Heizungsfoerderung fuer SHK-Fachbetriebe.
 
 Regeln, ausnahmslos:
 
@@ -88,22 +88,64 @@ Regeln, ausnahmslos:
 
 5. Wenn ein relevantes Dokument als ERSETZT markiert ist, weise darauf hin.
 
-6. Wenn eine kuenftige Absenkung oder Fristaenderung in den Dokumenten steht und fuer die Frage relevant sein koennte, nenne sie.
+6. Wenn eine kuenftige Absenkung oder Fristaenderung in den Dokumenten steht und fuer die Frage relevant sein koennte, nenne sie.`;
 
-7. Antworte in der Sprache der Frage.`;
+const LANGUAGE_RULE: Record<"de" | "en", string> = {
+  de: "7. Antworte auf Deutsch.",
+  en:
+    "7. Antworte auf Englisch, unabhaengig von der Sprache der Frage oder der Quelldokumente. Die Quelldokumente " +
+    "sind auf Deutsch; uebersetze praezise und nenne zentrale Rechts- und Foerderbegriffe beim ersten Vorkommen " +
+    "zusaetzlich auf Deutsch in Klammern, z.B. \"renewables requirement (Erneuerbare-Energien-Pflicht)\".",
+};
+
+function buildSystem(lang: "de" | "en"): string {
+  return `${SYSTEM_BASE}\n\n${LANGUAGE_RULE[lang]}`;
+}
+
+const NO_MATCH: Record<"de" | "en", string> = {
+  de: "Dazu finde ich nichts im hinterlegten Regelwerk. Bitte praezisiere die Frage oder ergaenze das Korpus.",
+  en: "Nothing in the stored corpus answers this. Please refine the question or extend the corpus.",
+};
+
+// The corpus and the retrieval stemmer are German-only. An English question shares almost
+// no keyword stems with the source text, so retrieval silently returns nothing unless we
+// translate the query for search purposes first. The answer is still generated from the
+// original question, so this only affects which chunks get selected, not what is said.
+async function germanSearchQuery(question: string): Promise<string> {
+  try {
+    const msg = await client.messages.create({
+      model: "claude-haiku-4-5-20251001",
+      max_tokens: 200,
+      system:
+        "Uebersetze die folgende Frage knapp und sinngemaess ins Deutsche, mit Fokus auf " +
+        "Fachbegriffe zu Heizungsgesetz und Foerderung. Gib ausschliesslich die deutsche " +
+        "Uebersetzung zurueck, ohne Anfuehrungszeichen oder Zusatztext.",
+      messages: [{ role: "user", content: question }],
+    });
+    const translated = msg.content
+      .filter((b): b is Anthropic.TextBlock => b.type === "text")
+      .map((b) => b.text)
+      .join("")
+      .trim();
+    return translated || question;
+  } catch {
+    return question;
+  }
+}
 
 export async function POST(req: Request) {
   try {
-    const { question } = await req.json();
+    const { question, lang: rawLang } = await req.json();
     if (!question || typeof question !== "string") {
       return NextResponse.json({ error: "question required" }, { status: 400 });
     }
+    const lang: "de" | "en" = rawLang === "en" ? "en" : "de";
 
-    const selected = retrieve(question);
+    const searchQuery = lang === "en" ? await germanSearchQuery(question) : question;
+    const selected = retrieve(searchQuery);
     if (selected.length === 0) {
       return NextResponse.json({
-        answer:
-          "Dazu finde ich nichts im hinterlegten Regelwerk. Bitte praezisiere die Frage oder ergaenze das Korpus.",
+        answer: NO_MATCH[lang],
         citations: [],
         retrieved: 0,
       });
@@ -124,7 +166,7 @@ export async function POST(req: Request) {
     const msg = await client.messages.create({
       model: process.env.ANTHROPIC_MODEL ?? "claude-sonnet-4-5",
       max_tokens: 1500,
-      system: SYSTEM,
+      system: buildSystem(lang),
       messages: [
         {
           role: "user",

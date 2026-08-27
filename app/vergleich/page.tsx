@@ -51,83 +51,83 @@ export default function Vergleich() {
     setLoading(false);
   }
 
-  const panel = {
-    background: "#fff",
-    borderRadius: 8,
-    padding: "18px 20px",
-    fontSize: 14,
-    lineHeight: 1.6,
-    whiteSpace: "pre-wrap" as const,
-    minHeight: 200,
-  };
-
   return (
-    <main style={{ maxWidth: 1180, margin: "0 auto", padding: "32px 24px 80px" }}>
-      <h1 style={{ fontSize: 22, margin: 0, fontWeight: 650 }}>
-        Warum allgemeine KI hier gefährlich ist
-      </h1>
-      <p style={{ margin: "6px 0 22px", color: "#6b6b64", fontSize: 14, maxWidth: 720 }}>
-        Dieselbe Frage, zweimal gestellt. Links ein allgemeiner Assistent ohne
-        Regelwerk. Rechts derselbe Assistent, aber ausschließlich auf Basis der
-        hinterlegten Originaldokumente, mit Quellenangabe und Gültigkeitsdatum.
-      </p>
+    <main className="container" style={{ paddingBottom: 80 }}>
+      <section className="hero" style={{ paddingBottom: 0 }}>
+        <span className="eyebrow">Direktvergleich</span>
+        <h1>Warum allgemeine KI hier gefährlich ist</h1>
+        <p className="lede">
+          Dieselbe Frage, zweimal gestellt. Links ein allgemeiner Assistent ohne
+          Regelwerk. Rechts derselbe Assistent, aber ausschließlich auf Basis
+          der hinterlegten Originaldokumente, mit Quellenangabe und
+          Gültigkeitsdatum.
+        </p>
+      </section>
 
-      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 20 }}>
+      <p className="chip-label">Testfragen</p>
+      <div className="chip-row">
         {PROBES.map((p) => (
-          <button
-            key={p.label}
-            onClick={() => run(p.q)}
-            title={p.note}
-            style={{
-              padding: "7px 13px", fontSize: 13, borderRadius: 6, cursor: "pointer",
-              border: "1px solid #d8d8d2", background: "#fff",
-            }}
-          >
+          <button key={p.label} onClick={() => run(p.q)} title={p.note} className="chip">
             {p.label}
           </button>
         ))}
         <button
           onClick={() => run(q)}
           disabled={loading}
-          style={{
-            padding: "7px 16px", fontSize: 13, borderRadius: 6, border: "none",
-            background: loading ? "#9a9a92" : "#1a1a18", color: "#fff",
-            cursor: loading ? "default" : "pointer",
-          }}
+          className="btn-secondary"
+          style={{ display: "inline-flex", alignItems: "center", gap: 8 }}
         >
+          {loading && <span className="spinner" style={{ borderColor: "rgba(20,20,15,0.2)", borderTopColor: "var(--ink)" }} />}
           {loading ? "läuft..." : "Erneut ausführen"}
         </button>
       </div>
 
-      <div style={{ fontSize: 14, marginBottom: 18, padding: "10px 14px", background: "#efefe9", borderRadius: 6 }}>
+      <div
+        style={{
+          fontSize: 14,
+          marginBottom: 22,
+          padding: "13px 16px",
+          background: "var(--surface)",
+          border: "1px solid var(--border)",
+          borderRadius: "var(--radius-sm)",
+          boxShadow: "var(--shadow-sm)",
+        }}
+      >
         <strong>Frage:</strong> {q}
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
         <section>
-          <h2 style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: ".07em", color: "#a4432a", margin: "0 0 9px" }}>
+          <p className="section-label" style={{ color: "var(--danger)" }}>
             Ohne Regelwerk
-          </h2>
-          <div style={{ ...panel, border: "1px solid #e0a89a" }}>
+          </p>
+          <div
+            className="answer-card"
+            style={{ border: "1px solid var(--danger-border)", minHeight: 200, fontSize: 14 }}
+          >
             {left ? (left.error ?? left.answer) : loading ? "..." : "Noch nicht ausgeführt."}
           </div>
-          <p style={{ fontSize: 12, color: "#8b8b83", marginTop: 9 }}>
-            Keine Quelle. Kein Gültigkeitsdatum. Nicht überprüfbar.
-          </p>
+          <p className="meta-line">Keine Quelle. Kein Gültigkeitsdatum. Nicht überprüfbar.</p>
         </section>
 
         <section>
-          <h2 style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: ".07em", color: "#5c7a52", margin: "0 0 9px" }}>
+          <p className="section-label" style={{ color: "var(--good)" }}>
             Mit Regelwerk
-          </h2>
-          <div style={{ ...panel, border: "1px solid #b8ccb0" }}>
+          </p>
+          <div
+            className="answer-card"
+            style={{ border: "1px solid var(--good-border)", minHeight: 200, fontSize: 14 }}
+          >
             {right ? (right.error ?? right.answer) : loading ? "..." : "Noch nicht ausgeführt."}
           </div>
           {right?.citations?.length > 0 && (
-            <div style={{ marginTop: 10 }}>
+            <div style={{ marginTop: 12 }}>
               {right.citations.map((c: any, i: number) => (
-                <div key={c.chunkId + i} style={{ fontSize: 12, color: "#5b5b54", marginBottom: 5 }}>
-                  [{i + 1}] {c.documentTitle}
+                <div key={c.chunkId + i} style={{ fontSize: 12, color: "var(--ink-soft)", marginBottom: 6 }}>
+                  <span className="citation-num" style={{ marginRight: 6 }}>
+                    {i + 1}
+                  </span>
+                  {c.documentTitle}
                   {c.paragraphRef ? `, ${c.paragraphRef}` : ""} · gültig ab{" "}
                   {c.validFrom ?? "unbekannt"}
                   {c.supersededBy ? " · ERSETZT" : ""}
@@ -138,11 +138,19 @@ export default function Vergleich() {
         </section>
       </div>
 
-      <p style={{ fontSize: 12, color: "#8b8b83", marginTop: 26, maxWidth: 720 }}>
-        Der linke Assistent wird nicht künstlich benachteiligt. Er erhält dieselbe
-        Frage ohne Zusatzanweisung. Der Unterschied entsteht allein dadurch, dass
-        er die aktuelle Rechtslage nicht kennt und das nicht wissen kann.
+      <p className="meta-line" style={{ maxWidth: 720 }}>
+        Der linke Assistent wird nicht künstlich benachteiligt. Er erhält
+        dieselbe Frage ohne Zusatzanweisung. Der Unterschied entsteht allein
+        dadurch, dass er die aktuelle Rechtslage nicht kennt und das nicht
+        wissen kann.
       </p>
+
+      <footer className="site-footer">
+        <p>
+          SHK Förder-Assistent · Keine Rechtsberatung · Verbindlich sind stets
+          die Originaldokumente. Der Meister entscheidet.
+        </p>
+      </footer>
     </main>
   );
 }

@@ -16,6 +16,16 @@ interface Probe {
   note: string;
 }
 
+interface Step {
+  title: string;
+  desc: string;
+}
+
+interface FaqItem {
+  q: string;
+  a: string;
+}
+
 interface HomeDict {
   eyebrow: string;
   title: string;
@@ -53,6 +63,14 @@ interface HomeDict {
   trialExhaustedTitle: string;
   trialExhaustedBody: string;
   signInToContinue: string;
+  howItWorksLabel: string;
+  steps: Step[];
+  faqLabel: string;
+  faq: FaqItem[];
+  closingTitle: string;
+  closingSubtitle: string;
+  closingCta: string;
+  closingSecondary: string;
 }
 
 interface PricingTierCopy {
@@ -74,6 +92,7 @@ interface PricingDict {
   pro: PricingTierCopy;
   team: PricingTierCopy;
   footerNote: string;
+  founderNote: (slotsLeft: number, founderPrice: number, currency: string) => string;
 }
 
 interface VergleichDict {
@@ -177,6 +196,44 @@ const dict: Record<Lang, Dict> = {
       trialExhaustedBody:
         "Sie haben Ihre 5 kostenlosen Fragen genutzt. Melden Sie sich an, um unbegrenzt weiterzumachen.",
       signInToContinue: "Anmelden & weitermachen",
+      howItWorksLabel: "So funktioniert's",
+      steps: [
+        {
+          title: "Frage stellen",
+          desc: "In normaler Sprache, wie am Telefon mit dem Kunden.",
+        },
+        {
+          title: "Korpus durchsucht, nie Trainingswissen",
+          desc: "Nur hinterlegte, aktuelle Dokumente werden geprüft. Steht die Antwort nicht drin, lehnt der Assistent ab statt zu raten.",
+        },
+        {
+          title: "Antwort mit Beleg und Datum",
+          desc: "Jede Aussage mit Quelle und Gültigkeitszeitraum – mit einem Klick selbst nachprüfbar.",
+        },
+      ],
+      faqLabel: "Häufige Fragen",
+      faq: [
+        {
+          q: "Wir zahlen schon für Craftnote, ToolTime oder ähnliche Software – wozu noch das hier?",
+          a: "Diese Tools beschleunigen Ihren bestehenden Workflow (Termine, Angebote, Dokumentation). Stichtag beantwortet eine andere Frage: Stimmt das, was ich meinem Kunden gerade sage, noch? Das ist keine Projektverwaltung, das ist Haftung – und läuft als Faktenebene unter Ihren bestehenden Tools, nicht daneben.",
+        },
+        {
+          q: "Kann die KI halluzinieren und meinem Kunden etwas Falsches erzählen?",
+          a: "Genau deshalb ist der Assistent so gebaut: Er antwortet ausschließlich aus hinterlegten Dokumenten, nie aus Trainingswissen, und lehnt ab, wenn nichts Passendes hinterlegt ist. Jede Aussage zeigt Quelle und Gültigkeitsdatum; wenn alte und neue Rechtslage beide auftauchen, wird das ausdrücklich benannt statt verschwiegen.",
+        },
+        {
+          q: "39 € im Monat und Einrichtungszeit – lohnt sich das für einen kleinen Betrieb?",
+          a: "Ein einziges falsch genanntes Förderamt kostet Sie entweder den Auftrag oder die Kundenbeziehung – das kostet mehr als ein Jahr Stichtag. Einrichtung bedeutet: ein Link, keine Installation, erste Antwort in 30 Sekunden. Der kostenlose Test existiert genau deshalb, an Ihrer schwierigsten Frage.",
+        },
+        {
+          q: "Was passiert mit unseren Daten?",
+          a: "Anfragen laufen über die Anthropic-API und werden laut deren Nutzungsbedingungen nicht zum Training von KI-Modellen verwendet. Ohne Anmeldung wird nur ein anonymer Zähler für den kostenlosen Test gespeichert, keine Frageninhalte.",
+        },
+      ],
+      closingTitle: "Testen Sie es an Ihrer schwierigsten Frage.",
+      closingSubtitle: "5 kostenlose Fragen, keine Kartenangaben, keine Installation.",
+      closingCta: "Jetzt kostenlos fragen",
+      closingSecondary: "Preise ansehen",
     },
     vergleich: {
       eyebrow: "Direktvergleich",
@@ -259,6 +316,8 @@ const dict: Record<Lang, Dict> = {
       },
       footerNote:
         "Alle Preise zzgl. USt. Keine Kartenangaben für den Test nötig. Kündigung jederzeit zum Monatsende.",
+      founderNote: (slotsLeft, founderPrice, currency) =>
+        `Gründungspreis: Noch ${slotsLeft} von 10 Plätzen zu ${currency}${founderPrice}/Monat auf Lebenszeit, statt regulär.`,
     },
   },
   en: {
@@ -332,6 +391,44 @@ const dict: Record<Lang, Dict> = {
       trialExhaustedTitle: "Free questions used up.",
       trialExhaustedBody: "You've used your 5 free questions. Sign in to keep going, unlimited.",
       signInToContinue: "Sign in & continue",
+      howItWorksLabel: "How it works",
+      steps: [
+        {
+          title: "Ask a question",
+          desc: "In plain language, the way you'd explain it to a customer on the phone.",
+        },
+        {
+          title: "Corpus searched, never training data",
+          desc: "Only the stored, current documents are checked. If the answer isn't in there, it declines instead of guessing.",
+        },
+        {
+          title: "Answer with source and date",
+          desc: "Every claim comes with a citation and a validity period — verifiable yourself in one click.",
+        },
+      ],
+      faqLabel: "Frequently asked",
+      faq: [
+        {
+          q: "We already pay for Craftnote, ToolTime, or similar software — why another tool?",
+          a: "Those tools speed up your existing workflow (scheduling, quotes, documentation). Stichtag answers a different question: is what I'm about to tell this customer still true? That's not project management, that's liability — and it runs as the fact layer under your existing tools, not beside them.",
+        },
+        {
+          q: "Can the AI hallucinate and tell my customer something wrong?",
+          a: "That's exactly why it's built this way: it answers only from stored documents, never from training knowledge, and declines when nothing relevant is loaded. Every claim shows its source and validity date; when old and new law both surface, it says so explicitly instead of staying quiet about it.",
+        },
+        {
+          q: "€39/month and setup time — worth it for a small business?",
+          a: "One wrong funding figure costs you either the job or the customer relationship — that's more than a year of Stichtag. Setup means one link, no install, first answer in 30 seconds. The free trial exists exactly for this: test it on your hardest question.",
+        },
+        {
+          q: "What happens to our data?",
+          a: "Requests run through the Anthropic API and, per their usage terms, aren't used to train AI models. Without sign-in, only an anonymous counter for the free trial is stored — no question content.",
+        },
+      ],
+      closingTitle: "Test it on your hardest question.",
+      closingSubtitle: "5 free questions, no card required, no install.",
+      closingCta: "Ask for free now",
+      closingSecondary: "See pricing",
     },
     vergleich: {
       eyebrow: "Head-to-head",
@@ -409,6 +506,8 @@ const dict: Record<Lang, Dict> = {
         cta: "Get in touch",
       },
       footerNote: "All prices exclude VAT. No card required for the trial. Cancel any time, effective end of month.",
+      founderNote: (slotsLeft, founderPrice, currency) =>
+        `Founding-member price: ${slotsLeft} of 10 spots left at ${currency}${founderPrice}/month, locked in for life.`,
     },
   },
 };

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { SignInButton } from "@clerk/nextjs";
 import { useLanguage } from "./i18n";
 import { DEMO_EMAIL } from "./pricing-config";
@@ -115,7 +116,24 @@ export default function Home() {
         <HeroPreview />
       </div>
 
-      <p className="chip-label no-print">{t.home.chipLabel}</p>
+      <div className="how-it-works no-print">
+        <p className="chip-label" style={{ marginBottom: 18 }}>
+          {t.home.howItWorksLabel}
+        </p>
+        <div className="steps-row">
+          {t.home.steps.map((s, i) => (
+            <div className="step" key={s.title}>
+              <span className="step-num">{i + 1}</span>
+              <div>
+                <p className="step-title">{s.title}</p>
+                <p className="step-desc">{s.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <p className="chip-label no-print" id="ask">{t.home.chipLabel}</p>
       <div className="chip-row no-print">
         {t.home.examples.map((ex) => (
           <button key={ex.label} onClick={() => ask(ex.q)} title={ex.why} className="chip">
@@ -253,6 +271,39 @@ export default function Home() {
           </div>
         </>
       )}
+
+      <div className="faq-section no-print">
+        <p className="chip-label" style={{ marginBottom: 18 }}>
+          {t.home.faqLabel}
+        </p>
+        {t.home.faq.map((item) => (
+          <details className="faq-item" key={item.q}>
+            <summary>{item.q}</summary>
+            <p>{item.a}</p>
+          </details>
+        ))}
+      </div>
+
+      <div className="closing-cta no-print">
+        <h2>{t.home.closingTitle}</h2>
+        <p>{t.home.closingSubtitle}</p>
+        <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+          <a
+            href="#ask"
+            className="btn-primary"
+            onClick={(e) => {
+              e.preventDefault();
+              document.getElementById("ask")?.scrollIntoView({ behavior: "smooth" });
+              document.querySelector<HTMLInputElement>(".ask-input")?.focus();
+            }}
+          >
+            {t.home.closingCta}
+          </a>
+          <Link href="/pricing" className="btn-secondary">
+            {t.home.closingSecondary}
+          </Link>
+        </div>
+      </div>
 
       <footer className="site-footer no-print">
         <p>{t.home.footer}</p>

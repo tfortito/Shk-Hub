@@ -9,4 +9,12 @@ export const PRICING = {
   team: { price: null as number | null }, // null => shown as "custom"/"auf Anfrage"
 };
 
+// Founding-member discount for the first cohort of paying businesses. Set
+// FOUNDER_SLOTS_LEFT to 0 (or FOUNDER_PROGRAM_ACTIVE to false) once it's full —
+// the pricing page hides the banner automatically.
+export const FOUNDER_PROGRAM_ACTIVE = true;
+export const FOUNDER_SLOTS_TOTAL = 10;
+export const FOUNDER_SLOTS_LEFT = 10;
+export const FOUNDER_PRICE = 29;
+
 export const DEMO_EMAIL = "titogngl66@gmail.com";

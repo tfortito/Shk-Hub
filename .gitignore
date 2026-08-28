@@ -4,3 +4,4 @@ node_modules
 corpus/raw
 corpus/needs-review.txt
 .DS_Store
+tsconfig.tsbuildinfo

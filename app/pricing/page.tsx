@@ -2,8 +2,15 @@
 
 import Link from "next/link";
 import { useLanguage } from "../i18n";
-import { CURRENCY, DEMO_EMAIL, PRICING } from "../pricing-config";
-import { IconCheck } from "../icons";
+import {
+  CURRENCY,
+  DEMO_EMAIL,
+  PRICING,
+  FOUNDER_PROGRAM_ACTIVE,
+  FOUNDER_SLOTS_LEFT,
+  FOUNDER_PRICE,
+} from "../pricing-config";
+import { IconCheck, IconClock } from "../icons";
 
 function formatPrice(price: number | null, lang: "de" | "en", customLabel: string, freeLabel: string) {
   if (price === null) return customLabel;
@@ -45,6 +52,13 @@ export default function Pricing() {
         <h1>{t.pricing.title}</h1>
         <p className="lede">{t.pricing.lede}</p>
       </section>
+
+      {FOUNDER_PROGRAM_ACTIVE && FOUNDER_SLOTS_LEFT > 0 && (
+        <div className="countdown-banner" style={{ marginBottom: 26 }}>
+          <IconClock size={15} />
+          {t.pricing.founderNote(FOUNDER_SLOTS_LEFT, FOUNDER_PRICE, CURRENCY)}
+        </div>
+      )}
 
       <div className="pricing-grid">
         {tiers.map((tier) => {

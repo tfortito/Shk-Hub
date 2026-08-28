@@ -109,9 +109,95 @@
 
   .meta a { color: var(--ink-faint); }
 
+  /* --- The timeline: the document's own mechanic, made visible --- */
+
+  .timeline-block {
+    margin-bottom: 32px;
+  }
+
+  .timeline-label {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: 0 0 26px;
+  }
+
+  .timeline {
+    position: relative;
+    height: 74px;
+    margin: 0 6px;
+  }
+
+  .timeline-rail {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 8px;
+    height: 2px;
+    background: var(--rule);
+  }
+
+  .timeline-today {
+    position: absolute;
+    top: -20px;
+    bottom: -4px;
+    width: 0;
+    border-left: 2px dashed var(--amber);
+  }
+
+  .timeline-today-label {
+    position: absolute;
+    top: -20px;
+    transform: translateX(-50%);
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 9.5px;
+    font-weight: 600;
+    color: var(--amber);
+    white-space: nowrap;
+    letter-spacing: 0.03em;
+  }
+
+  .timeline-node {
+    position: absolute;
+    top: 0;
+    transform: translateX(-50%);
+    text-align: center;
+    width: 148px;
+  }
+
+  .timeline-dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 999px;
+    background: var(--surface);
+    border: 2.5px solid var(--rule);
+    margin: 0 auto 10px;
+  }
+
+  .timeline-node.is-past .timeline-dot { border-color: var(--ink-faint); }
+  .timeline-node.is-now .timeline-dot { border-color: var(--brand); background: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
+  .timeline-node.is-future .timeline-dot { border-color: var(--amber); }
+
+  .timeline-date {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .timeline-desc {
+    font-size: 10.5px;
+    color: var(--ink-soft);
+    line-height: 1.4;
+    margin-top: 2px;
+  }
+
   .kpi-strip {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 0;
     border-top: 1px solid var(--rule);
     border-bottom: 1px solid var(--rule);
@@ -119,7 +205,7 @@
   }
 
   .kpi {
-    padding: 16px 18px;
+    padding: 14px 18px;
     border-right: 1px solid var(--rule);
   }
   .kpi:last-child { border-right: none; }
@@ -127,16 +213,16 @@
   .kpi-num {
     font-family: "IBM Plex Mono", ui-monospace, monospace;
     font-variant-numeric: tabular-nums;
-    font-size: 21px;
+    font-size: 19px;
     font-weight: 600;
     color: var(--brand-dark);
     line-height: 1.1;
   }
 
   .kpi-label {
-    font-size: 11.5px;
+    font-size: 11px;
     color: var(--ink-soft);
-    margin-top: 6px;
+    margin-top: 5px;
     line-height: 1.4;
   }
 
@@ -179,17 +265,36 @@
 
   .roadmap-step {
     display: flex;
-    gap: 10px;
-    margin-bottom: 13px;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 14px;
   }
-  .roadmap-num {
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
     font-family: "IBM Plex Mono", ui-monospace, monospace;
-    font-size: 11px;
+    font-size: 9.5px;
     font-weight: 600;
-    color: var(--brand);
-    flex-shrink: 0;
-    padding-top: 1px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 2.5px 8px;
+    border-radius: 999px;
+    width: fit-content;
   }
+  .status-pill::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+  }
+  .status-pill.built { background: var(--brand-soft); color: var(--brand-dark); }
+  .status-pill.built::before { background: var(--brand); }
+  .status-pill.started { background: var(--amber-soft); color: var(--amber); }
+  .status-pill.started::before { background: var(--amber); }
+  .status-pill.planned { background: transparent; color: var(--ink-faint); border: 1px solid var(--rule); }
+  .status-pill.planned::before { background: var(--ink-faint); }
+
   .roadmap-text { font-size: 12.8px; line-height: 1.55; color: var(--ink-soft); }
   .roadmap-text strong { color: var(--ink); }
 
@@ -287,8 +392,11 @@
 
   @media (max-width: 760px) {
     .sheet { padding: 28px 22px; }
-    .kpi-strip { grid-template-columns: repeat(2, 1fr); }
-    .kpi:nth-child(2) { border-right: none; }
+    .timeline-block { overflow-x: auto; }
+    .timeline { width: 640px; }
+    .kpi-strip { grid-template-columns: 1fr; }
+    .kpi { border-right: none; border-bottom: 1px solid var(--rule); }
+    .kpi:last-child { border-bottom: none; }
     .body-grid { grid-template-columns: 1fr; }
     .objection-row { grid-template-columns: 1fr; }
     .footer { flex-direction: column; }
@@ -300,20 +408,27 @@
     .sheet { border: none; box-shadow: none; max-width: 100%; border-radius: 0; padding: 26px 34px; }
     h1 { font-size: 24px; }
     .subtitle { font-size: 13px; margin-bottom: 14px; }
-    .meta { padding-bottom: 16px; margin-bottom: 18px; }
-    .kpi-strip { margin-bottom: 22px; page-break-inside: avoid; }
-    .kpi { padding: 12px 16px; }
-    .kpi-num { font-size: 19px; }
+    .meta { padding-bottom: 12px; margin-bottom: 14px; }
+    .timeline-block { margin-bottom: 16px; page-break-inside: avoid; }
+    .timeline-label { margin-bottom: 16px; font-size: 9.5px; }
+    .timeline { height: 56px; }
+    .timeline-date { font-size: 9.5px; }
+    .timeline-desc { font-size: 9px; }
+    .timeline-today-label { font-size: 8.5px; }
+    .kpi-strip { margin-bottom: 16px; page-break-inside: avoid; }
+    .kpi { padding: 8px 14px; }
+    .kpi-num { font-size: 16px; }
+    .kpi-label { font-size: 9.5px; }
     .body-grid { gap: 22px; margin-bottom: 22px; }
     .col p { font-size: 11.5px; line-height: 1.5; margin-bottom: 9px; }
     .col h2 { margin-bottom: 9px; padding-bottom: 6px; }
     .roadmap-step, .move { margin-bottom: 9px; page-break-inside: avoid; }
     .roadmap-text { font-size: 11.5px; line-height: 1.48; }
     .objections h2 { margin-bottom: 8px; }
-    .objection-row { padding: 9px 0; page-break-inside: avoid; grid-template-columns: 215px 1fr; gap: 16px; }
-    .objection-q, .objection-a { font-size: 11.5px; line-height: 1.48; }
-    .footer { margin-top: 18px; padding-top: 12px; page-break-inside: avoid; }
-    .sources { font-size: 9px; line-height: 1.55; }
+    .objection-row { padding: 7px 0; page-break-inside: avoid; grid-template-columns: 215px 1fr; gap: 16px; }
+    .objection-q, .objection-a { font-size: 11px; line-height: 1.42; }
+    .footer { margin-top: 12px; padding-top: 10px; }
+    .sources { font-size: 8.5px; line-height: 1.45; }
   }
 </style>
 
@@ -334,22 +449,52 @@
     <span>Repo: <a href="https://github.com/tfortito/Shk-Hub">github.com/tfortito/Shk-Hub</a></span>
   </div>
 
+  <div class="timeline-block">
+    <p class="timeline-label">The mechanic this document is arguing for — on the actual timeline</p>
+    <div class="timeline">
+      <div class="timeline-rail"></div>
+      <div class="timeline-today" style="left: 59%"></div>
+      <div class="timeline-today-label" style="left: 59%">TODAY · 27 AUG 2026</div>
+      <div class="timeline-node is-past" style="left: 12%">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">Jan 2024</div>
+        <div class="timeline-desc">65% rule begins<span class="ref">[3]</span></div>
+      </div>
+      <div class="timeline-node is-now" style="left: 31%">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">21 Jul 2026</div>
+        <div class="timeline-desc">BEG funding reset<span class="ref">[4]</span></div>
+      </div>
+      <div class="timeline-node is-now" style="left: 50%">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">29 Jul 2026</div>
+        <div class="timeline-desc">GModG repeals it<span class="ref">[3]</span></div>
+      </div>
+      <div class="timeline-node is-future" style="left: 69%">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">1 Feb 2027</div>
+        <div class="timeline-desc">First BEG stepdown<span class="ref">[4]</span></div>
+      </div>
+      <div class="timeline-node is-future" style="left: 88%">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">1 Aug 2027</div>
+        <div class="timeline-desc">Next stepdown, repeats<span class="ref">[4]</span></div>
+      </div>
+    </div>
+  </div>
+
   <div class="kpi-strip">
     <div class="kpi">
       <div class="kpi-num">48,050</div>
-      <div class="kpi-label">SHK trade businesses in Germany, 2024<span class="kpi-ref">[1]</span></div>
-    </div>
-    <div class="kpi">
-      <div class="kpi-num">388,334</div>
-      <div class="kpi-label">People employed in the SHK trade<span class="kpi-ref">[1]</span></div>
+      <div class="kpi-label">SHK businesses in Germany, avg. 8 employees<span class="kpi-ref">[1]</span></div>
     </div>
     <div class="kpi">
       <div class="kpi-num">€59.1bn</div>
       <div class="kpi-label">Industry revenue, 2025<span class="kpi-ref">[2]</span></div>
     </div>
     <div class="kpi">
-      <div class="kpi-num">2 law changes</div>
-      <div class="kpi-label">in 30 days: GModG + BEG funding reset, July 2026<span class="kpi-ref">[3,4]</span></div>
+      <div class="kpi-num">0 of 4</div>
+      <div class="kpi-label">Incumbent SHK tools that cite sources with validity dates<span class="kpi-ref">[6]</span></div>
     </div>
   </div>
 
@@ -387,24 +532,24 @@
 
     <div class="col">
       <h2>What ships first</h2>
-      <p>The three CraftHub building blocks, in build order, not all at once:</p>
+      <p>The three CraftHub building blocks — real status, not a wishlist:</p>
       <div class="roadmap-step">
-        <span class="roadmap-num">01</span>
-        <span class="roadmap-text"><strong>Knowledge</strong> (built, this case) — source-cited
-        answers on law &amp; funding. The cheapest trust proof, and the hardest for a generic
-        chatbot to fake convincingly.</span>
+        <span class="status-pill built">Built</span>
+        <span class="roadmap-text"><strong>Knowledge</strong> — source-cited answers on law
+        &amp; funding. The cheapest trust proof, and the hardest for a generic chatbot to fake
+        convincingly.</span>
       </div>
       <div class="roadmap-step">
-        <span class="roadmap-num">02</span>
-        <span class="roadmap-text"><strong>Workflow</strong> (started) — from a drafted
-        customer email to a real quote-text generator: the trade's actual core output.</span>
+        <span class="status-pill started">Started</span>
+        <span class="roadmap-text"><strong>Workflow</strong> — from a drafted customer email to
+        a real quote-text generator: the trade's actual core output.</span>
       </div>
       <div class="roadmap-step">
-        <span class="roadmap-num">03</span>
-        <span class="roadmap-text"><strong>Communication</strong> (later) — phone/WhatsApp
-        intake that captures a request and answers it against the knowledge layer. Pointless
-        until that layer is trustworthy: an AI front desk quoting the wrong subsidy is worse
-        than no AI front desk.</span>
+        <span class="status-pill planned">Planned</span>
+        <span class="roadmap-text"><strong>Communication</strong> — phone/WhatsApp intake that
+        captures a request and answers it against the knowledge layer. Pointless until that
+        layer is trustworthy: an AI front desk quoting the wrong subsidy is worse than no AI
+        front desk.</span>
       </div>
     </div>
 
